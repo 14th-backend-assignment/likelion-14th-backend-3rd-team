@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내가 쓴 글</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; background: #f5f5f5; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        h2 { margin: 0; }
+        button { padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        button:hover { background: #d32f2f; }
+        .post { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 16px; }
+        .post h3 { margin: 0 0 8px 0; }
+        .post p { margin: 0 0 8px 0; color: #666; }
+        .post small { color: #999; }
+        #message { text-align: center; color: #999; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>내가 쓴 글</h2>
+        <button onclick="logout()">로그아웃</button>
+    </div>
+    <div id="posts"></div>
+    <div id="message"></div>
+
+    <script>
+        async function loadPosts() {
+            const response = await fetch('/api/users/me/posts/', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (response.status === 401) {
+                window.location.href = '/login/';
+                return;
+            }
+
+            const data = await response.json();
+            const postsDiv = document.getElementById('posts');
+            const message = document.getElementById('message');
+
+            if (data.data && data.data.length > 0) {
+                data.data.forEach(post => {
+                    postsDiv.innerHTML += `
+                        <div class="post">
+                            <h3>${post.title}</h3>
+                            <p>${post.content}</p>
+                            <small>${post.created_at}</small>
+                        </div>
+                    `;
+                });
+            } else {
+                message.textContent = '작성한 게시글이 없습니다.';
+            }
+        }
+
+        async function logout() {
+    const csrfToken = document.cookie.split(';')
+        .find(c => c.trim().startsWith('csrftoken='))
+        ?.split('=')[1];
+
+    await fetch('/api/users/logout/', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+    });
+    window.location.href = '/login/';
+}
+        loadPosts();
+    </script>
+</body>
+</html>

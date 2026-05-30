@@ -16,11 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from users import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users/',    include('users.urls')),
+    
+    # API
+    path('api/users/', include('users.urls')),
     re_path(r'^api/posts(?:/|$)', include('posts.urls')),
     re_path(r'^api/comments(?:/|$)', include('comments.urls')),
-    path('api/likes/',    include('likes.urls')),
+    path('api/likes/', include('likes.urls')),
+    
+    # 페이지
+    path('signup/', user_views.signup_page),
+    path('login/', user_views.login_page),
+    path('myposts/', user_views.myposts_page),
 ]
