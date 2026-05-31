@@ -36,3 +36,4 @@ class CommentLikeAPIView(APIView):
             like.delete()
             return Response({"detail": "댓글 좋아요 취소"}, status=status.HTTP_204_NO_CONTENT)
         return Response({"detail": "좋아요를 누르지 않았습니다."}, status=status.HTTP_400_BAD_REQUEST)
+# 터미널 푸시 연습
