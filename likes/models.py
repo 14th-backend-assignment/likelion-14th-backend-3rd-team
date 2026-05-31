@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from posts.models import Post, Comment
+from posts.models import Post
+from comments.models import Comment
 
 class PostLike(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

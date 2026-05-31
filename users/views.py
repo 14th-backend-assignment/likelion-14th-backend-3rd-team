@@ -65,7 +65,7 @@ class MyPostsView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         from posts.models import Post
-        posts = Post.objects.filter(user=request.user)
+        posts = Post.objects.filter(author=request.user)
         data = [
             {
                 "id": post.id,
